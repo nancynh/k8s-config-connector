@@ -28,7 +28,8 @@ import (
 var _ identity.Identity = &CatalogIdentity{}
 
 const (
-	CatalogIDURL = parent.ProjectAndLocationURL + "/catalogs/{{catalogID}}"
+	CatalogIDTokens = "catalogs"
+	CatalogIDURL    = parent.ProjectAndLocationURL + "/catalogs/{{catalogID}}"
 )
 
 // CatalogIdentity defines the resource reference to BigLakeCatalog, which "External" field
@@ -66,9 +67,8 @@ func (i *CatalogIdentity) FromExternal(ref string) error {
 	return nil
 }
 
-var _ identity.Resource = &BigLakeCatalog{}
-
-func (obj *BigLakeCatalog) GetIdentity(ctx context.Context, reader client.Reader) (identity.Identity, error) {
+// New builds a CatalogIdentity from the Config Connector Catalog object.
+func NewCatalogIdentity(ctx context.Context, reader client.Reader, obj *BigLakeCatalog) (*CatalogIdentity, error) {
 	catalog := &CatalogIdentity{}
 
 	// Resolve user-configured Parent

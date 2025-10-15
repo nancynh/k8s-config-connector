@@ -28,7 +28,6 @@ go run . generate-types \
   --resource FirestoreIndex:Index
 
 go run . generate-mapper \
-  --multiversion \
   --service google.firestore.admin.v1 \
   --api-version firestore.cnrm.cloud.google.com/v1beta1
 

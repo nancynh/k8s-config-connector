@@ -29,8 +29,8 @@ func init() {
 
 func bigLakeCatalogFuzzer() fuzztesting.KRMFuzzer {
 	f := fuzztesting.NewKRMTypedFuzzer(&pb.Catalog{},
-		BigLakeCatalogSpec_v1alpha1_FromProto, BigLakeCatalogSpec_v1alpha1_ToProto,
-		BigLakeCatalogObservedState_v1alpha1_FromProto, BigLakeCatalogObservedState_v1alpha1_ToProto,
+		BigLakeCatalogSpec_FromProto, BigLakeCatalogSpec_ToProto,
+		BigLakeCatalogObservedState_FromProto, BigLakeCatalogObservedState_ToProto,
 	)
 
 	f.StatusFields.Insert(".create_time")

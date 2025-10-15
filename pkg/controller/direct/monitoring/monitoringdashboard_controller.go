@@ -141,6 +141,7 @@ func (m *dashboardModel) AdapterForURL(ctx context.Context, url string) (directb
 	}
 
 	return nil, nil
+
 }
 
 // Find implements the Adapter interface.

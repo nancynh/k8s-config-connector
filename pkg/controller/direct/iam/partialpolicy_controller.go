@@ -126,7 +126,7 @@ func (a *IAMPartialPolicyAdapter) Find(ctx context.Context) (bool, error) {
 	log.V(2).Info("getting IAM policy for resource", "kind", a.desired.Spec.ResourceReference.Kind, "name", a.desired.Spec.ResourceReference.Name, "namespace", a.desired.Spec.ResourceReference.Namespace, "external", a.desired.Spec.ResourceReference.External)
 	mapCtx := &direct.MapContext{}
 
-	iamPolicySkeleton := ToIAMPolicySkeleton(a.desired)
+	iamPolicySkeleton := ToOldIAMPolicySkeleton(a.desired)
 	oldKRMPolicy, err := a.iamClient.GetPolicy(ctx, iamPolicySkeleton)
 	if err != nil {
 		if apierrors.IsNotFound(err) || k8s.IsReferenceNotFoundError(err) {
@@ -195,7 +195,8 @@ func (a *IAMPartialPolicyAdapter) Create(ctx context.Context, createOp *directba
 	if a.actualReferencedResourcePolicy == nil {
 		livePolicyForMerge = &krm.IAMPolicy{}
 	} else {
-		livePolicyForMerge = ToIAMPolicySkeleton(a.desired)
+		// todo acpana round trip ?
+		livePolicyForMerge = ToNewIAMPolicySkeleton(a.desired)
 	}
 
 	resolver := IAMMemberIdentityResolver{IAMClient: a.iamClient, Ctx: ctx}
@@ -309,10 +310,10 @@ func (a *IAMPartialPolicyAdapter) Export(ctx context.Context) (*unstructured.Uns
 	return nil, nil
 }
 
-// ToIAMPolicySkeleton creates an IAMPolicy struct with ObjectMeta and resource reference
+// ToNewIAMPolicySkeleton creates an IAMPolicy struct with ObjectMeta and resource reference
 // copied from the partial policy. The skeleton struct can be passed to IAMClient.GetPolicy()
 // to fetch the live IAM policy.
-func ToIAMPolicySkeleton(p *krm.IAMPartialPolicy) *krm.IAMPolicy {
+func ToNewIAMPolicySkeleton(p *krm.IAMPartialPolicy) *krm.IAMPolicy {
 	res := &krm.IAMPolicy{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       krm.IAMPolicyGVK.Kind,
@@ -330,8 +331,28 @@ func ToIAMPolicySkeleton(p *krm.IAMPartialPolicy) *krm.IAMPolicy {
 	return res
 }
 
+// old style v1beta1 Policy representation for the IAM Client
+func ToOldIAMPolicySkeleton(p *krm.IAMPartialPolicy) *krm.IAMPolicy {
+	res := &krm.IAMPolicy{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       krm.IAMPolicyGVK.Kind,
+			APIVersion: krm.IAMAPIVersion,
+		},
+	}
+
+	res.ObjectMeta = *p.ObjectMeta.DeepCopy()
+	res.Spec.ResourceReference.APIVersion = p.Spec.ResourceReference.APIVersion
+	res.Spec.ResourceReference.Kind = p.Spec.ResourceReference.Kind
+	res.Spec.ResourceReference.Name = p.Spec.ResourceReference.Name
+	res.Spec.ResourceReference.Namespace = p.Spec.ResourceReference.Namespace
+	res.Spec.ResourceReference.External = p.Spec.ResourceReference.External
+
+	return res
+}
+
+// todo acpana -- get rid of the "oldiamv1beta1" translations throughout here and mappings
 func toDesiredPolicy(desiredPartialPolicy *krm.IAMPartialPolicy, livePolicy *krm.IAMPolicy) *krm.IAMPolicy {
-	desiredPolicy := ToIAMPolicySkeleton(desiredPartialPolicy)
+	desiredPolicy := ToOldIAMPolicySkeleton(desiredPartialPolicy)
 
 	if len(desiredPartialPolicy.Status.AllBindings) > 0 {
 		desiredPolicy.Spec.Bindings = make([]krm.IAMPolicyBinding, len(desiredPartialPolicy.Status.AllBindings))

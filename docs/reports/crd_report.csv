@@ -48,7 +48,7 @@ beyondcorp.cnrm.cloud.google.com,BeyondCorpAppConnector,True,False,False,Terrafo
 beyondcorp.cnrm.cloud.google.com,BeyondCorpAppGateway,True,False,False,Terraform
 bigquerybiglake.cnrm.cloud.google.com,BigLakeCatalog,True,False,False,Direct
 bigquerybiglake.cnrm.cloud.google.com,BigLakeDatabase,True,False,False,Direct
-bigquerybiglake.cnrm.cloud.google.com,BigLakeTable,True,True,False,Direct
+bigquerybiglake.cnrm.cloud.google.com,BigLakeTable,True,False,False,Direct
 bigqueryanalyticshub.cnrm.cloud.google.com,BigQueryAnalyticsHubDataExchange,True,True,False,Direct
 bigqueryanalyticshub.cnrm.cloud.google.com,BigQueryAnalyticsHubListing,True,True,False,Direct
 bigqueryconnection.cnrm.cloud.google.com,BigQueryConnectionConnection,True,True,False,Direct
@@ -243,7 +243,7 @@ edgecontainer.cnrm.cloud.google.com,EdgeContainerNodePool,False,True,False,Terra
 edgecontainer.cnrm.cloud.google.com,EdgeContainerVpnConnection,False,True,False,Terraform
 edgenetwork.cnrm.cloud.google.com,EdgeNetworkNetwork,False,True,False,Terraform
 edgenetwork.cnrm.cloud.google.com,EdgeNetworkSubnet,False,True,False,Terraform
-essentialcontacts.cnrm.cloud.google.com,EssentialContactsContact,True,True,False,Direct
+essentialcontacts.cnrm.cloud.google.com,EssentialContactsContact,True,False,False,Direct
 eventarc.cnrm.cloud.google.com,EventarcChannel,True,False,False,Direct
 eventarc.cnrm.cloud.google.com,EventarcGoogleChannelConfig,True,False,False,Direct
 eventarc.cnrm.cloud.google.com,EventarcTrigger,False,True,False,DCL
@@ -258,7 +258,6 @@ firebase.cnrm.cloud.google.com,FirebaseProject,True,False,False,Terraform
 firebasestorage.cnrm.cloud.google.com,FirebaseStorageBucket,True,False,False,Terraform
 firebase.cnrm.cloud.google.com,FirebaseWebApp,True,False,False,Terraform
 firestore.cnrm.cloud.google.com,FirestoreDatabase,True,True,False,Direct
-firestore.cnrm.cloud.google.com,FirestoreField,True,False,False,Direct
 firestore.cnrm.cloud.google.com,FirestoreIndex,False,True,False,Terraform
 resourcemanager.cnrm.cloud.google.com,Folder,False,True,False,Terraform
 gkebackup.cnrm.cloud.google.com,GKEBackupBackupPlan,True,False,False,Direct

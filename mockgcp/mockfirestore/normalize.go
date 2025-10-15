@@ -31,15 +31,6 @@ func (s *MockService) ConfigureVisitor(url string, replacements mockgcpregistry.
 	replacements.ReplacePath(".response.earliestVersionTime", TimePlaceholder)
 	replacements.ReplacePath(".earliestVersionTime", TimePlaceholder)
 
-	// Fields
-	replacements.ReplacePath(".response.startTime", TimePlaceholder)
-
-	// BackupSchedules
-	replacements.ReplacePath(".backupSchedules[].createTime", TimePlaceholder)
-	replacements.ReplacePath(".backupSchedules[].updateTime", TimePlaceholder)
-	replacements.ReplacePath(".createTime", TimePlaceholder)
-	replacements.ReplacePath(".updateTime", TimePlaceholder)
-
 }
 
 func (s *MockService) Previsit(event mockgcpregistry.Event, replacements mockgcpregistry.NormalizingVisitor) {
@@ -59,19 +50,12 @@ func (s *MockService) Previsit(event mockgcpregistry.Event, replacements mockgcp
 		event.VisitResponseStringValues(func(path string, value string) {
 			switch path {
 			case ".response.name", ".name":
-				tokens := strings.Split(value, "/")
-
 				if previousId != "" {
+					tokens := strings.Split(value, "/")
 					if len(tokens) == 4 && tokens[2] == "databases" {
 						log.Info("normalizing previousId in database name", "path", path, "name", value, "previousId", previousId)
 						replacements.ReplaceStringValue(tokens[3], "${randomDatabaseID}")
 					}
-				}
-				if len(tokens) == 6 && tokens[2] == "databases" && tokens[4] == "backupSchedules" {
-					replacements.ReplaceStringValue(tokens[5], "${backupScheduleID}")
-				}
-				if len(tokens) == 8 && tokens[0] == "projects" && tokens[2] == "databases" && tokens[4] == "collectionGroups" && tokens[6] == "indexes" {
-					replacements.ReplaceStringValue(tokens[7], "${indexID}")
 				}
 			}
 		})

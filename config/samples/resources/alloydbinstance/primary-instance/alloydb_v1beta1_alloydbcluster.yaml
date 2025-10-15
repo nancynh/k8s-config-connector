@@ -22,4 +22,4 @@ spec:
     networkRef: 
       name: alloydbinstance-dep-primary
   projectRef:
-    external: nancyhong-kcc3
+    external: ${PROJECT_ID?}
